@@ -1,1 +1,399 @@
-/Volumes/Macintosh HD/Users/erain/.emacs
+(setq visible-bell t)
+
+(setq inhibit-startup-message t)
+(setq inhibit-splash-screen t)
+
+(setq mouse-yank-at-point t)
+
+(setq kill-ring-max 200)
+
+(setq default-fill-column 60)
+
+(setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
+(setq sentence-end-double-space nil)
+
+(setq enable-recursive-minibuffers t)
+
+(setq scroll-margin 3
+      scroll-conservatively 10000)
+
+(show-paren-mode t)
+(setq show-paren-style 'parentheses)
+
+(setq frame-title-format "emacs@%b")
+
+(auto-image-file-mode)
+
+(put 'set-goal-column 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'LaTeX-hide-environment 'disabled nil)
+
+(mapcar
+ (function (lambda (setting)
+	     (setq auto-mode-alist
+		   (cons setting auto-mode-alist))))
+ '(("\\.xml$".  sgml-mode)
+   ("\\\.bash" . sh-mode)
+   ("\\.rdf$".  sgml-mode)
+   ("\\.session" . emacs-lisp-mode)
+   ("\\.l$" . c-mode)
+   ("\\.css$" . css-mode)
+   ("\\.cfm$" . html-mode)
+   ("gnus" . emacs-lisp-mode)
+   ("\\.idl$" . idl-mode)))
+
+(setq user-full-name "Yi Yu   ")
+(setq user-mail-address "YiYu@Ymail.com")
+
+(setq dired-recursive-copies 'top)
+(setq dired-recursive-deletes 'top)
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(TeX-PDF-mode t)
+ '(TeX-source-correlate-method (quote synctex))
+ '(TeX-source-correlate-mode t)
+ '(TeX-source-correlate-start-server t)
+ '(TeX-view-program-list (quote (("Preview" "open %o"))))
+ '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Preview") (output-html "xdg-open"))))
+ '(column-number-mode t)
+ '(show-paren-mode t)
+ '(weblogger-config-alist (quote (("net9" "http://erain.net9.org/blog/xmlrpc.php" "erain" "yiyu5678" "1") ("erain9" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997") ("erain for sale" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997")))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Here is my configuration
+;; I know what exactly I am doing in the following :-)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; load something not in the default folder
+;; (setq load-path (cons (expand-file-name "~/some-folder") load-path)  )
+(setq load-path (cons (expand-file-name "~/.emacs.d/") load-path)  )
+
+(setq load-path (cons (expand-file-name "~/.emacs.d/color-theme") load-path)  )
+(require 'color-theme)
+(color-theme-initialize)
+;; (load-file "~/.emacs.d/color-theme/themes/color-theme-blackboard.el")
+;; (color-theme-arjen)
+;; (color-theme-hober)
+(color-theme-gruber-darker)
+
+;; highlight current line:
+;; (global-hl-line-mode nil)		
+
+;; Flyspell configuration
+(setq flyspell-issue-welcome-flag nil) ;; fix flyspell problem
+(setq-default ispell-program-name "/usr/local/bin/aspell")
+(setq-default ispell-list-command "list")
+
+
+;; wheel mouse scroll enabled:
+(mouse-wheel-mode t)
+
+;; scrolling, cursor, tool-bar
+;; (scroll-bar-mode nil)
+(blink-cursor-mode nil)
+(setq transient-mark-mode t)
+;; (tool-bar-mode nil)
+
+;; display column numbers in status bar:
+(column-number-mode 't)
+
+;;display time in status bar:
+(setq display-time-24hr-format t)
+(setq display-time-day-and-date t)
+(display-time)
+
+;; battery mode:
+;; (require 'battery)
+;; (setq battery-mode-line-format " [%L %p%% %dC]")
+;; (display-battery-mode)
+
+;; let us use Home/End for buffer (while C-a, C-e for line:)
+;; (global-set-key [home] 'beginning-of-buffer)
+;; (global-set-key [end] 'end-of-buffer)
+
+;; setting color syntax highlighting:
+(require 'font-lock)
+(global-font-lock-mode t)
+(setq-default font-lock-auto-fontify t)
+
+;; Author: WANG Ying
+;; About Paste: Meta-y
+(global-set-key [(meta ?/)] 'hippie-expand)
+(setq hippie-expand-try-functions-list 
+      '(try-expand-dabbrev
+	try-expand-dabbrev-visible
+	try-expand-dabbrev-all-buffers
+	try-expand-dabbrev-from-kill
+	try-complete-file-name-partially
+	try-complete-file-name
+	try-expand-all-abbrevs
+	try-expand-list
+	try-expand-line
+	try-complete-lisp-symbol-partially
+	try-complete-lisp-symbol))
+
+;; Author: WAMG Ying
+;; Match the parentheses
+;; When press % on a parenthese, then go to the matching parenthese
+;; Otherwise input an parenthese
+(global-set-key "%" 'match-paren)
+(defun match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+	((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+	(t (self-insert-command (or arg 1)))))
+
+;; Author: WANG Ying
+;; go-to-char
+;; When you press C-c a x, then you go to the next 'x'
+(defun wy-go-to-char (n char)
+  "Move forward to Nth occurence of CHAR.Typing `wy-go-to-char-key' again will move forwad to the next Nth occurence of CHAR."
+  (interactive "p\ncGo to char: ")
+  (search-forward (string char) nil nil n)
+  (while (char-equal (read-char)
+		     char)
+    (search-forward (string char) nil nil n))
+  (setq unread-command-events (list last-input-event)))
+(define-key global-map (kbd "C-c a") 'wy-go-to-char)
+
+;; Speedbar in the same frame
+(when (require 'sr-speedbar nil 'noerror)
+  (setq speedbar-supported-extension-expressions
+	'(".org" ".[ch]\\(\\+\\+\\|pp\\|c\\|h\\|xx\\)?"
+	  ".tex\\(i\\(nfo\\)?\\)?" ".el"
+	  ".java" ".p[lm]" ".pm" ".py"  ".s?html" ".css"
+	  "Makefile.am" "configure.ac"))
+  (setq
+   sr-speedbar-width-x 20
+   sr-speedbar-right-side t))
+(global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
+
+
+;; IDO:
+(require 'ido)
+(ido-mode t)
+(setq ido-enable-flex-matching t)
+
+
+;; save desktop:
+;; (desktop-save-mode 1)
+
+;; ibuffer:
+(require 'ibuffer)
+(setq ibuffer-default-sorting-mode 'major-mode)
+(setq ibuffer-always-show-last-buffer t)
+(setq ibuffer-view-ibuffer t)
+(global-set-key (kbd "C-x C-b") 'ibuffer-other-window)
+
+;; backup files:
+(setq backup-by-copying t    ; don't clobber symlinks
+      backup-directory-alist
+      '(("." . "~/.saves")))            ; don't litter my fs tree
+(setq version-control t)
+(setq kept-new-versions 3)
+(setq delete-old-versions t)
+(setq kept-old-versions 2)
+(setq dired-kept-versions 1)
+
+;; instead of save desktop, rather save last editing place in files,
+;; as well as minibuffer:
+(require 'saveplace)
+(setq-default save-place t)
+(savehist-mode t)
+
+;; change the prefix of outline-minor-mode
+(setq outline-minor-mode-prefix [(control o)])
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Haskell Mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq load-path (cons (expand-file-name "~/.emacs.d/haskellmode-emacs") load-path)  )
+
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+
+(setq auto-mode-alist
+      (append auto-mode-alist
+              '(("\\.[hg]s$"  . haskell-mode)
+                ("\\.hic?$"     . haskell-mode)
+                ("\\.hsc$"     . haskell-mode)
+		("\\.chs$"    . haskell-mode)
+                ("\\.l[hg]s$" . literate-haskell-mode))))
+(autoload 'haskell-mode "haskell-mode"
+  "Major mode for editing Haskell scripts." t)
+(autoload 'literate-haskell-mode "haskell-mode"
+  "Major mode for editing literate Haskell scripts." t)
+
+;; adding the following lines according to which modules you want to use:
+(require 'inf-haskell)
+
+(add-hook 'haskell-mode-hook 'turn-on-font-lock)
+;; (add-hook 'haskell-mode-hook 'turn-off-haskell-decl-scan)
+;; (add-hook 'haskell-mode-hook 'turn-off-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+;; (add-hook 'haskell-mode-hook 'turn-on-haskell-hugs)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-ghci)
+(add-hook 'haskell-mode-hook 
+	  (function
+	   (lambda ()
+	     (setq haskell-program-name "ghci")
+	     (setq haskell-ghci-program-name "ghci6"))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;======= Code folding =======
+(add-hook 'python-mode-hook 'my-python-outline-hook)
+;; this gets called by outline to deteremine the level. Just use the length of the whitespace
+(defun py-outline-level ()
+  (let (buffer-invisibility-spec)
+    (save-excursion
+      (skip-chars-forward "    ")
+      (current-column))))
+;; this get called after python mode is enabled
+(defun my-python-outline-hook ()
+;; outline uses this regexp to find headers. I match lines with no indent and indented "class"
+;; and "def" lines.
+  (setq outline-regexp "[^ \t]\\|[ \t]*\\(def\\|class\\) ")
+;;  enable our level computation
+  (setq outline-level 'py-outline-level)
+;; do not use their \C-c@ prefix, too hard to type. Note this overides some bindings.
+  (setq outline-minor-mode-prefix "\C-t")
+;; turn on outline mode
+  (outline-minor-mode t)
+;; initially hide all but the headers
+;; (hide-body)
+;; make paren matches visible
+  (show-paren-mode 1)
+  )
+
+
+;;; paredit for clojure mode
+;;; (require 'paredit) if you didn't install via package.el
+(defun turn-on-paredit () (paredit-mode 1))
+(add-hook 'clojure-mode-hook 'turn-on-paredit)
+
+
+;;; Wordpress settings
+(setq weblogger-save-password t)
+
+
+;;; Twittering-Mode setting
+;; (add-to-list 'load-path "~/.emacs.d/twittering-mode/")
+;; (require 'twittering-mode)
+
+
+;;; multi-web-mode
+(setq load-path (cons (expand-file-name "~/.emacs.d/multi-web-mode/") load-path)  )
+(require 'multi-web-mode)
+;; (when
+;;     (load
+;;      (expand-file-name "~/.emacs.d/multi-web-mode/multi-web-mode.el"))
+;;   (package-initialize))
+(setq mweb-default-major-mode 'html-mode)
+(setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+		  (espresso-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
+		  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
+(setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
+(multi-web-global-mode 1)
+
+;;; espresso-mode for javascript
+(autoload #'espresso-mode "espresso" "Start espresso-mode" t)
+(add-to-list 'auto-mode-alist '("\\.js$" . espresso-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
+
+;;; ActionScript-Mode
+;; (when
+;;     (load
+;;      (expand-file-name "~/.emacs.d/actionscript-mode.el"))
+;;   (package-initialize))
+(add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
+
+;;; PHP-Mode
+(autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+
+
+;;; C++ mode
+(defun my-c-mode-common-hook ()
+  ;; my customizations for all of c-mode, c++-mode, objc-mode, java-mode
+  (c-set-offset 'substatement-open 0)
+  ;; other customizations can go here
+  (setq c-default-style "linux")		  ;; the default code style
+  (setq c++-tab-always-indent t)
+  (setq c-basic-offset 4)                  ;; Default is 2
+  (setq c-indent-level 4)                  ;; Default is 2
+  (setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60))
+  (setq tab-width 4)
+  (setq indent-tabs-mode t)  ; use spaces only if nil
+  )
+(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+
+;; For auctex configuration
+(setq latex-configuration "~/.emacs.d/latex.el")
+(load latex-configuration 'noerror)
+
+
+;; For yasnippet
+(require 'yasnippet-bundle)
+
+;; Scala mode configuration
+(setq load-path (cons (expand-file-name "~/.emacs.d/scala-mode/") load-path)  )
+(require 'scala-mode-auto)
+(add-hook 'scala-mode-hook
+	  '(lambda ()
+	     (yas/minor-mode-on)
+	     ))
+(setq yas/my-directory "~/.emacs.d/scala-mode/contrib/yasnippet/snippets")
+(yas/load-directory yas/my-directory)
+
+;; Lua mode configuration
+;; This mode is clone from GitHub
+(setq load-path (cons (expand-file-name "~/.emacs.d/lua-mode/") load-path)  )
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+(setq lua-indent-level 2)
+(setq lua-electric-flag nil)
+(defun lua-abbrev-mode-off () (abbrev-mode 0))
+(add-hook 'lua-mode-hook 'lua-abbrev-mode-off)
+(setq save-abbrevs nil)   ;; is this still needed?
+
+
+;; For MarkDown Mode
+;; Although I still don't know what it is...
+(autoload 'markdown-mode "markdown-mode.el"
+   "Major mode for editing Markdown files" t)
+(setq auto-mode-alist
+   (cons '("\\.text" . markdown-mode) auto-mode-alist))
+
+
+
+
+;;; This was installed by package-install.el.
+;;; This provides support for the package system and
+;;; interfacing with ELPA, the package archive.
+;;; Move this code earlier if you want to reference
+;;; packages in your .emacs.
+(when
+    (load
+     (expand-file-name "~/.emacs.d/elpa/package.el"))
+  (package-initialize))
+
