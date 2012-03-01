@@ -1,3 +1,7 @@
+(require 'cl) ; a rare necessary use of REQUIRE
+(defvar *emacs-load-start* (current-time))
+
+
 (setq visible-bell t)
 
 (setq inhibit-startup-message t)
@@ -7,7 +11,7 @@
 
 (setq kill-ring-max 200)
 
-(setq default-fill-column 60)
+(setq fill-column 60)
 
 (setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
 (setq sentence-end-double-space nil)
@@ -30,7 +34,7 @@
 (put 'downcase-region 'disabled nil)
 (put 'LaTeX-hide-environment 'disabled nil)
 
-(mapcar
+(mapc
  (function (lambda (setting)
 	     (setq auto-mode-alist
 		   (cons setting auto-mode-alist))))
@@ -51,10 +55,10 @@
 (setq dired-recursive-deletes 'top)
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(TeX-PDF-mode t)
  '(TeX-source-correlate-method (quote synctex))
  '(TeX-source-correlate-mode t)
@@ -66,6 +70,21 @@
  '(weblogger-config-alist (quote (("net9" "http://erain.net9.org/blog/xmlrpc.php" "erain" "yiyu5678" "1") ("erain9" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997") ("erain for sale" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997")))))
 
 
+;; To make system copy work with Emacs paste and Emacs copy work with system paste
+(setq x-select-enable-clipboard t)
+
+
+;; Auto-compile emacs.el file when saving
+(defun autocompile nil
+  "compile itself if ~/.emacs"
+  (interactive)
+  (require 'bytecomp)
+  (let ((dotemacs (expand-file-name "~/.emacs")))
+    (if (string= (buffer-file-name) (file-chase-links dotemacs))
+	(byte-compile-file dotemacs))))
+
+
+(add-hook 'after-save-hook 'autocompile)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Here is my configuration
@@ -77,12 +96,21 @@
 (setq load-path (cons (expand-file-name "~/.emacs.d/") load-path)  )
 
 (setq load-path (cons (expand-file-name "~/.emacs.d/color-theme") load-path)  )
+;; (autoload 'color-theme "loading color theme" t)
 (require 'color-theme)
 (color-theme-initialize)
 ;; (load-file "~/.emacs.d/color-theme/themes/color-theme-blackboard.el")
 ;; (color-theme-arjen)
 ;; (color-theme-hober)
-(color-theme-gruber-darker)
+;; (color-theme-gruber-darker)
+;;;;
+;; solarized theme for emacs
+;;;
+(setq load-path (cons (expand-file-name "~/.emacs.d/color-theme/themes/emacs-color-theme-solarized/") load-path)  )
+;; (autoload 'color-theme-solarized "color-theme-solarized" t)
+(require 'color-theme-solarized)
+(color-theme-solarized-dark)
+;; (color-theme-solarized-light)
 
 ;; highlight current line:
 ;; (global-hl-line-mode nil)		
@@ -120,7 +148,8 @@
 ;; (global-set-key [end] 'end-of-buffer)
 
 ;; setting color syntax highlighting:
-(require 'font-lock)
+;; (require 'font-lock)
+(autoload 'font-lock "loading font-lock" t)
 (global-font-lock-mode t)
 (setq-default font-lock-auto-fontify t)
 
@@ -166,20 +195,21 @@
 (define-key global-map (kbd "C-c a") 'wy-go-to-char)
 
 ;; Speedbar in the same frame
-(when (require 'sr-speedbar nil 'noerror)
-  (setq speedbar-supported-extension-expressions
-	'(".org" ".[ch]\\(\\+\\+\\|pp\\|c\\|h\\|xx\\)?"
-	  ".tex\\(i\\(nfo\\)?\\)?" ".el"
-	  ".java" ".p[lm]" ".pm" ".py"  ".s?html" ".css"
-	  "Makefile.am" "configure.ac"))
-  (setq
-   sr-speedbar-width-x 20
-   sr-speedbar-right-side t))
-(global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
+;; (when (require 'sr-speedbar nil 'noerror)
+;;   (setq speedbar-supported-extension-expressions
+;; 	'(".org" ".[ch]\\(\\+\\+\\|pp\\|c\\|h\\|xx\\)?"
+;; 	  ".tex\\(i\\(nfo\\)?\\)?" ".el"
+;; 	  ".java" ".p[lm]" ".pm" ".py"  ".s?html" ".css"
+;; 	  "Makefile.am" "configure.ac"))
+;;   (setq
+;;    sr-speedbar-width-x 20
+;;    sr-speedbar-right-side t))
+;; (global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
 
 
 ;; IDO:
-(require 'ido)
+;; (require 'ido)
+(autoload 'ido "loading ido" t)
 (ido-mode t)
 (setq ido-enable-flex-matching t)
 
@@ -188,7 +218,8 @@
 ;; (desktop-save-mode 1)
 
 ;; ibuffer:
-(require 'ibuffer)
+;; (require 'ibuffer)
+(autoload 'ibuffer "loading ibuffer" t)
 (setq ibuffer-default-sorting-mode 'major-mode)
 (setq ibuffer-always-show-last-buffer t)
 (setq ibuffer-view-ibuffer t)
@@ -207,7 +238,8 @@
 ;; instead of save desktop, rather save last editing place in files,
 ;; as well as minibuffer:
 (require 'saveplace)
-(setq-default save-place t)
+;; (setq-default save-place t)
+(autoload 'saveplace "loading saveplace" t)
 (savehist-mode t)
 
 ;; change the prefix of outline-minor-mode
@@ -237,7 +269,8 @@
   "Major mode for editing literate Haskell scripts." t)
 
 ;; adding the following lines according to which modules you want to use:
-(require 'inf-haskell)
+;; (require 'inf-haskell)
+(autoload 'inf-haskell "loading inf-haskell" t)
 
 (add-hook 'haskell-mode-hook 'turn-on-font-lock)
 ;; (add-hook 'haskell-mode-hook 'turn-off-haskell-decl-scan)
@@ -267,24 +300,25 @@
       (current-column))))
 ;; this get called after python mode is enabled
 (defun my-python-outline-hook ()
-;; outline uses this regexp to find headers. I match lines with no indent and indented "class"
-;; and "def" lines.
+  ;; outline uses this regexp to find headers. I match lines with no indent and indented "class"
+  ;; and "def" lines.
   (setq outline-regexp "[^ \t]\\|[ \t]*\\(def\\|class\\) ")
-;;  enable our level computation
+  ;;  enable our level computation
   (setq outline-level 'py-outline-level)
-;; do not use their \C-c@ prefix, too hard to type. Note this overides some bindings.
+  ;; do not use their \C-c@ prefix, too hard to type. Note this overides some bindings.
   (setq outline-minor-mode-prefix "\C-t")
-;; turn on outline mode
+  ;; turn on outline mode
   (outline-minor-mode t)
-;; initially hide all but the headers
-;; (hide-body)
-;; make paren matches visible
+  ;; initially hide all but the headers
+  ;; (hide-body)
+  ;; make paren matches visible
   (show-paren-mode 1)
   )
 
 
 ;;; paredit for clojure mode
 ;;; (require 'paredit) if you didn't install via package.el
+
 (defun turn-on-paredit () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'turn-on-paredit)
 
@@ -301,6 +335,7 @@
 ;;; multi-web-mode
 (setq load-path (cons (expand-file-name "~/.emacs.d/multi-web-mode/") load-path)  )
 (require 'multi-web-mode)
+;; (autoload 'multi-web-mode  "loading multi-web-mode" t)
 ;; (when
 ;;     (load
 ;;      (expand-file-name "~/.emacs.d/multi-web-mode/multi-web-mode.el"))
@@ -312,22 +347,54 @@
 (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
 (multi-web-global-mode 1)
 
+
+
 ;;; espresso-mode for javascript
 (autoload #'espresso-mode "espresso" "Start espresso-mode" t)
 (add-to-list 'auto-mode-alist '("\\.js$" . espresso-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
+
+
+;;; tuareg mode for ocaml file
+(setq load-path (cons (expand-file-name "~/.emacs.d/tuareg-mode/") load-path)  )
+(setq auto-mode-alist (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
+(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+(autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+(setq tuareg-default-indent 4)
+(setq tuareg-with-indent 2)
+(setq tuareg-|-extra-unindent 2)
+;; utop part
+;; (autoload 'utop "utop" "Toplevel for OCaml" t)
+;; (autoload 'utop-eval-region "utop" "Toplevel for OCaml" t)
+;; (autoload 'utop-eval-phrase "utop" "Toplevel for OCaml" t)
+;; (autoload 'utop-eval-buffer "utop" "Toplevel for OCaml" t)
+
+;; (defun tuareg-utop-hook ()
+;;   (local-set-key "\M-\C-x" 'utop-eval-phrase)
+;;   (local-set-key "\C-x\C-e" 'utop-eval-phrase)
+;;   (local-set-key "\C-c\C-e" 'utop-eval-phrase)
+;;   (local-set-key "\C-c\C-r" 'utop-eval-region)
+;;   (local-set-key "\C-c\C-b" 'utop-eval-buffer))
+
+;; (add-hook 'tuareg-mode-hook 'tuareg-utop-hook)
+
+
+
 
 ;;; ActionScript-Mode
 ;; (when
 ;;     (load
 ;;      (expand-file-name "~/.emacs.d/actionscript-mode.el"))
 ;;   (package-initialize))
-(add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
+;; (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
+
+
 
 ;;; PHP-Mode
 (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+
 
 
 ;;; C++ mode
@@ -346,23 +413,32 @@
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 
+
 ;; For auctex configuration
 (setq latex-configuration "~/.emacs.d/latex.el")
-(load latex-configuration 'noerror)
+;; (load latex-configuration 'noerror)
+(autoload 'latex-configuration "loading latex configuration" t)
+
 
 
 ;; For yasnippet
 (require 'yasnippet-bundle)
+;; (autoload 'yasnippet-bundle "loading yasnippetp-bundle" t)
+
+
 
 ;; Scala mode configuration
 (setq load-path (cons (expand-file-name "~/.emacs.d/scala-mode/") load-path)  )
-(require 'scala-mode-auto)
+;; (require 'scala-mode-auto)
+(autoload 'scala-mode-auto "loading scala-mode" t)
 (add-hook 'scala-mode-hook
 	  '(lambda ()
 	     (yas/minor-mode-on)
 	     ))
 (setq yas/my-directory "~/.emacs.d/scala-mode/contrib/yasnippet/snippets")
 (yas/load-directory yas/my-directory)
+
+
 
 ;; Lua mode configuration
 ;; This mode is clone from GitHub
@@ -377,14 +453,45 @@
 (setq save-abbrevs nil)   ;; is this still needed?
 
 
+
 ;; For MarkDown Mode
 ;; Although I still don't know what it is...
 (autoload 'markdown-mode "markdown-mode.el"
-   "Major mode for editing Markdown files" t)
+  "Major mode for editing Markdown files" t)
 (setq auto-mode-alist
-   (cons '("\\.text" . markdown-mode) auto-mode-alist))
+      (cons '("\\.text" . markdown-mode) auto-mode-alist))
 
 
+
+;; C#-mode
+(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
+(setq auto-mode-alist
+      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
+
+
+
+
+;; Twittering Mode
+;; (require 'twittering-mode)
+(autoload 'twittering-mode "loading twittering mode" t)
+(setq twittering-use-master-password t)
+
+
+
+
+;; ;; ibus-el: For using ibus under emacs in Ubuntu
+;; (require 'ibus)
+;; ;; Turn on ibus-mode automatically after loading .emacs
+;; (add-hook 'after-init-hook 'ibus-mode-on)
+;; ;; Use C-SPC for Set Mark command
+;; (ibus-define-common-key ?\C-\s nil)
+;; ;; Use C-/ for Undo command
+;; (ibus-define-common-key ?\C-/ nil)
+;; ;; Use S-SPC toggle ibus
+;; (ibus-define-common-key ?\S-\s nil)
+;; (global-set-key (kbd "S-SPC") 'ibus-toggle)
+;; ;; Use C-x M-i toggle ibus mode.
+;; (global-set-key (kbd "C-x M-i") 'ibus-mode)
 
 
 ;;; This was installed by package-install.el.
@@ -397,3 +504,6 @@
      (expand-file-name "~/.emacs.d/elpa/package.el"))
   (package-initialize))
 
+
+(message "My .emacs loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
+				     (- (+ hi lo) (+ (first *emacs-load-start*) (second *emacs-load-start*)))))

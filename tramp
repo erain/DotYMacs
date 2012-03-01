@@ -63,4 +63,6 @@
   ("remote-encoding" "base64")
   ("remote-decoding" "base64 -d")
   ("file-exists" "test -e")
-  ("uid-integer" 0)))
+  ("uid-integer" 0))
+ (["scpc" "erain" "workforbitcoin.com" nil]
+  nil))
