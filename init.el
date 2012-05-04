@@ -67,7 +67,8 @@
  '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Preview") (output-html "xdg-open"))))
  '(column-number-mode t)
  '(show-paren-mode t)
- '(weblogger-config-alist (quote (("net9" "http://erain.net9.org/blog/xmlrpc.php" "erain" "yiyu5678" "1") ("erain9" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997") ("erain for sale" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997")))))
+ '(weblogger-config-alist (quote ( ("erain9" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997") )))
+ )
 
 
 ;; To make system copy work with Emacs paste and Emacs copy work with system paste
@@ -394,6 +395,18 @@
 (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+(add-hook 'php-mode-hook
+	  '(lambda () (define-abbrev php-mode-abbrev-table "ex" "extends")))
+(defun clean-php-mode ()
+  (interactive)
+  (php-mode)
+  (setq c-basic-offset 2) ; 2 tabs indenting
+  (setq indent-tabs-mode nil)
+  (setq fill-column 78)
+  (c-set-offset 'case-label '+)
+  (c-set-offset 'arglist-close 'c-lineup-arglist-operators))
+(c-set-offset 'arglist-intro '+) ; for FAPI arrays and DBTNG
+(c-set-offset 'arglist-cont-nonempty 'c-lineup-math) ; for DBTNG fields and values
 
 
 
@@ -467,6 +480,22 @@
 (autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
 (setq auto-mode-alist
       (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
+
+
+
+;; Clojure Mode
+(setq load-path (cons (expand-file-name "~/.emacs.d/clojure-mode/") load-path)  )
+;; major mode from <https://github.com/technomancy/clojure-mode>
+(autoload 'clojure-mode "clojure-mode" "Major mode for editing clojure code" t)
+(defun turn-on-paredit () (paredit-mode 1))
+(add-hook 'clojure-mode-hook 'turn-on-paredit)
+
+
+
+;;; Common Lisp
+;; (setq inferior-lisp-program "sbcl")
+;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
+
 
 
 
