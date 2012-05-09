@@ -129,7 +129,7 @@
 ;; (scroll-bar-mode nil)
 (blink-cursor-mode nil)
 (setq transient-mark-mode t)
-;; (tool-bar-mode nil)
+(tool-bar-mode nil)
 
 ;; display column numbers in status bar:
 (column-number-mode 't)
@@ -379,6 +379,14 @@
 
 ;; (add-hook 'tuareg-mode-hook 'tuareg-utop-hook)
 
+
+
+;;; slime mode for common-lisp
+(setq load-path (cons (expand-file-name "~/.emacs.d/slime/") load-path))
+(require 'slime)
+(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
+(setq inferior-lisp-program "/usr/bin/sbcl")
+(slime-setup '(slime-fancy))
 
 
 
