@@ -7,6 +7,9 @@
 (setq inhibit-startup-message t)
 (setq inhibit-splash-screen t)
 
+;; I hate tabs!
+(setq-default indent-tabs-mode nil)
+
 (setq mouse-yank-at-point t)
 
 (setq kill-ring-max 200)
@@ -100,21 +103,21 @@
 ;; (autoload 'color-theme "loading color theme" t)
 (require 'color-theme)
 (color-theme-initialize)
-;; (load-file "~/.emacs.d/color-theme/themes/color-theme-blackboard.el")
+(load-file "~/.emacs.d/color-theme/themes/color-theme-blackboard.el")
 ;; (color-theme-arjen)
 ;; (color-theme-hober)
-;; (color-theme-gruber-darker)
+(color-theme-gruber-darker)
 ;;;;
 ;; solarized theme for emacs
 ;;;
-(setq load-path (cons (expand-file-name "~/.emacs.d/color-theme/themes/emacs-color-theme-solarized/") load-path)  )
+;; (setq load-path (cons (expand-file-name "~/.emacs.d/color-theme/themes/emacs-color-theme-solarized/") load-path)  )
 ;; (autoload 'color-theme-solarized "color-theme-solarized" t)
-(require 'color-theme-solarized)
-(color-theme-solarized-dark)
+;; (require 'color-theme-solarized)
+;; (color-theme-solarized-dark)
 ;; (color-theme-solarized-light)
 
 ;; highlight current line:
-;; (global-hl-line-mode nil)		
+(global-hl-line-mode nil)		
 
 ;; Flyspell configuration
 (setq flyspell-issue-welcome-flag nil) ;; fix flyspell problem
@@ -129,7 +132,7 @@
 ;; (scroll-bar-mode nil)
 (blink-cursor-mode nil)
 (setq transient-mark-mode t)
-(tool-bar-mode nil)
+(tool-bar-mode -1)
 
 ;; display column numbers in status bar:
 (column-number-mode 't)
@@ -500,6 +503,10 @@
 
 
 
+;; scheme mode
+(add-to-list 'auto-mode-alist '("\\.scm$" . scheme-mode))
+
+
 ;;; Common Lisp
 ;; (setq inferior-lisp-program "sbcl")
 ;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
@@ -536,10 +543,10 @@
 ;;; interfacing with ELPA, the package archive.
 ;;; Move this code earlier if you want to reference
 ;;; packages in your .emacs.
-(when
-    (load
-     (expand-file-name "~/.emacs.d/elpa/package.el"))
-  (package-initialize))
+;; (when
+;;     (load
+;;      (expand-file-name "~/.emacs.d/elpa/package.el"))
+;;   (package-initialize))
 
 
 (message "My .emacs loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
