@@ -1,6 +1,4 @@
 (require 'cl) ; a rare necessary use of REQUIRE
-(defvar *emacs-load-start* (current-time))
-
 
 (setq visible-bell t)
 
@@ -76,19 +74,6 @@
 
 ;; To make system copy work with Emacs paste and Emacs copy work with system paste
 (setq x-select-enable-clipboard t)
-
-
-;; Auto-compile emacs.el file when saving
-(defun autocompile nil
-  "compile itself if ~/.emacs"
-  (interactive)
-  (require 'bytecomp)
-  (let ((dotemacs (expand-file-name "~/.emacs")))
-    (if (string= (buffer-file-name) (file-chase-links dotemacs))
-	(byte-compile-file dotemacs))))
-
-
-(add-hook 'after-save-hook 'autocompile)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Here is my configuration
@@ -197,18 +182,6 @@
     (search-forward (string char) nil nil n))
   (setq unread-command-events (list last-input-event)))
 (define-key global-map (kbd "C-c a") 'wy-go-to-char)
-
-;; Speedbar in the same frame
-;; (when (require 'sr-speedbar nil 'noerror)
-;;   (setq speedbar-supported-extension-expressions
-;; 	'(".org" ".[ch]\\(\\+\\+\\|pp\\|c\\|h\\|xx\\)?"
-;; 	  ".tex\\(i\\(nfo\\)?\\)?" ".el"
-;; 	  ".java" ".p[lm]" ".pm" ".py"  ".s?html" ".css"
-;; 	  "Makefile.am" "configure.ac"))
-;;   (setq
-;;    sr-speedbar-width-x 20
-;;    sr-speedbar-right-side t))
-;; (global-set-key (kbd "C-c s") 'sr-speedbar-toggle)
 
 
 ;; IDO:
@@ -385,11 +358,11 @@
 
 
 ;;; slime mode for common-lisp
-(setq load-path (cons (expand-file-name "~/.emacs.d/slime/") load-path))
-(require 'slime)
-(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
-(setq inferior-lisp-program "/usr/bin/sbcl")
-(slime-setup '(slime-fancy))
+;; (setq load-path (cons (expand-file-name "~/.emacs.d/slime/") load-path))
+;; (require 'slime)
+;; (add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
+;; (setq inferior-lisp-program "/usr/bin/sbcl")
+;; (slime-setup '(slime-fancy))
 
 
 
@@ -549,5 +522,3 @@
 ;;   (package-initialize))
 
 
-(message "My .emacs loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
-				     (- (+ hi lo) (+ (first *emacs-load-start*) (second *emacs-load-start*)))))
