@@ -47,7 +47,8 @@
    ("\\.css$" . css-mode)
    ("\\.cfm$" . html-mode)
    ("gnus" . emacs-lisp-mode)
-   ("\\.idl$" . idl-mode)))
+   ("\\.idl$" . idl-mode)
+   ("\\.m$" . octave-mode)))
 
 (setq user-full-name "Yi Yu   ")
 (setq user-mail-address "YiYu@Ymail.com")
@@ -487,8 +488,7 @@
 (autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
 (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
 (autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
-(setq auto-mode-alist (append '(("\\.pl$" . prolog-mode)
-                                ("\\.m$" . mercury-mode))
+(setq auto-mode-alist (append '(("\\.pl$" . prolog-mode))
 ;; (setq prolog-system 'swi)  ; optional, the system you are using;
 ;;                            ; see `prolog-system' below for possible values
                                auto-mode-alist))
