@@ -48,7 +48,8 @@
    ("\\.cfm$" . html-mode)
    ("gnus" . emacs-lisp-mode)
    ("\\.idl$" . idl-mode)
-   ("\\.m$" . octave-mode)))
+   ("\\.m$" . octave-mode)
+   ("\\.md$" . markdown-mode)))
 
 (setq user-full-name "Yi Yu   ")
 (setq user-mail-address "YiYu@Ymail.com")
