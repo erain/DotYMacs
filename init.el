@@ -490,9 +490,9 @@
 (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
 (autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
 (setq auto-mode-alist (append '(("\\.pl$" . prolog-mode))
-;; (setq prolog-system 'swi)  ; optional, the system you are using;
-;;                            ; see `prolog-system' below for possible values
-                               auto-mode-alist))
+                              ;; (setq prolog-system 'swi)  ; optional, the system you are using;
+                              ;;                            ; see `prolog-system' below for possible values
+                              auto-mode-alist))
 
 
 
@@ -504,30 +504,10 @@
 
 
 
-
-;; ;; ibus-el: For using ibus under emacs in Ubuntu
-;; (require 'ibus)
-;; ;; Turn on ibus-mode automatically after loading .emacs
-;; (add-hook 'after-init-hook 'ibus-mode-on)
-;; ;; Use C-SPC for Set Mark command
-;; (ibus-define-common-key ?\C-\s nil)
-;; ;; Use C-/ for Undo command
-;; (ibus-define-common-key ?\C-/ nil)
-;; ;; Use S-SPC toggle ibus
-;; (ibus-define-common-key ?\S-\s nil)
-;; (global-set-key (kbd "S-SPC") 'ibus-toggle)
-;; ;; Use C-x M-i toggle ibus mode.
-;; (global-set-key (kbd "C-x M-i") 'ibus-mode)
-
-
-;;; This was installed by package-install.el.
-;;; This provides support for the package system and
-;;; interfacing with ELPA, the package archive.
-;;; Move this code earlier if you want to reference
-;;; packages in your .emacs.
-;; (when
-;;     (load
-;;      (expand-file-name "~/.emacs.d/elpa/package.el"))
-;;   (package-initialize))
-
+;; Add the original Emacs Lisp Package Archive
+;; (add-to-list 'package-archives
+;;              '("elpa" . "http://tromey.com/elpa/"))
+;; ;; Add the user-contributed repository
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
 
