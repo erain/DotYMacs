@@ -1,20 +1,45 @@
+(mapc
+ (function (lambda (setting)
+	     (setq auto-mode-alist
+		   (cons setting auto-mode-alist))))
+ '(("\\.xml$".  sgml-mode)
+   ("\\\.bash" . sh-mode)
+   ("\\.rdf$".  sgml-mode)
+   ("\\.session" . emacs-lisp-mode)
+   ("\\.l$" . c-mode)
+   ("\\.cs$" . csharp-mode)
+   ("\\.css$" . css-mode)
+   ("\\.cfm$" . html-mode)
+   ("gnus" . emacs-lisp-mode)
+   ("\\.idl$" . idl-mode)
+   ("\\.m$" . octave-mode)
+   ("\\.php$" . php-mode)
+   ("\\.inc$" . php-mode)
+   ("\\.md$" . markdown-mode)
+   ("\\.text" . markdown-mode)
+   ("\\.js$" . espresso-mode)
+   ("\\.json$" . espresso-mode)
+   ("\\.ml\\w?" . tuareg-mode)
+   ("\\.lua$" . lua-mode)
+   ("\\.scm$" . scheme-mode)
+   ("\\.[hg]s$"  . haskell-mode)
+   ("\\.hic?$"     . haskell-mode)
+   ("\\.hsc$"     . haskell-mode)
+   ("\\.chs$"    . haskell-mode)
+   ("\\.l[hg]s$" . literate-haskell-mode)))
+
+
+;; For yasnippet
+(autoload 'yasnippet-bundle "loading yasnippetp-bundle" t)
+
+
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Haskell Mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq load-path (cons (expand-file-name "~/.emacs.d/haskellmode-emacs") load-path)  )
 
-;; (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-;; (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
-
-(setq auto-mode-alist
-      (append auto-mode-alist
-              '(("\\.[hg]s$"  . haskell-mode)
-                ("\\.hic?$"     . haskell-mode)
-                ("\\.hsc$"     . haskell-mode)
-		("\\.chs$"    . haskell-mode)
-                ("\\.l[hg]s$" . literate-haskell-mode))))
 (autoload 'haskell-mode "haskell-mode"
   "Major mode for editing Haskell scripts." t)
 (autoload 'literate-haskell-mode "haskell-mode"
@@ -70,7 +95,6 @@
 
 ;;; paredit for clojure mode
 ;;; (require 'paredit) if you didn't install via package.el
-
 (defun turn-on-paredit () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'turn-on-paredit)
 
@@ -78,11 +102,6 @@
 ;;; multi-web-mode
 (setq load-path (cons (expand-file-name "~/.emacs.d/multi-web-mode/") load-path)  )
 (require 'multi-web-mode)
-;; (autoload 'multi-web-mode  "loading multi-web-mode" t)
-;; (when
-;;     (load
-;;      (expand-file-name "~/.emacs.d/multi-web-mode/multi-web-mode.el"))
-;;   (package-initialize))
 (setq mweb-default-major-mode 'html-mode)
 (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
 		  (espresso-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
@@ -92,13 +111,9 @@
 
 ;;; espresso-mode for javascript
 (autoload #'espresso-mode "espresso" "Start espresso-mode" t)
-(add-to-list 'auto-mode-alist '("\\.js$" . espresso-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
 
 
 ;;; tuareg mode for ocaml file
-(setq load-path (cons (expand-file-name "~/.emacs.d/tuareg-mode/") load-path)  )
-(setq auto-mode-alist (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
 (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
 (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
 (setq tuareg-default-indent 4)
@@ -109,14 +124,12 @@
 ;; (autoload 'utop-eval-region "utop" "Toplevel for OCaml" t)
 ;; (autoload 'utop-eval-phrase "utop" "Toplevel for OCaml" t)
 ;; (autoload 'utop-eval-buffer "utop" "Toplevel for OCaml" t)
-
 ;; (defun tuareg-utop-hook ()
 ;;   (local-set-key "\M-\C-x" 'utop-eval-phrase)
 ;;   (local-set-key "\C-x\C-e" 'utop-eval-phrase)
 ;;   (local-set-key "\C-c\C-e" 'utop-eval-phrase)
 ;;   (local-set-key "\C-c\C-r" 'utop-eval-region)
 ;;   (local-set-key "\C-c\C-b" 'utop-eval-buffer))
-
 ;; (add-hook 'tuareg-mode-hook 'tuareg-utop-hook)
 
 
@@ -131,8 +144,6 @@
 
 ;;; PHP-Mode
 (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
 (add-hook 'php-mode-hook
 	  '(lambda () (define-abbrev php-mode-abbrev-table "ex" "extends")))
 (defun clean-php-mode ()
@@ -170,30 +181,21 @@
 
 
 
-;; For yasnippet
-(require 'yasnippet-bundle)
-;; (autoload 'yasnippet-bundle "loading yasnippetp-bundle" t)
-
-
 
 ;; Scala mode configuration
-(setq load-path (cons (expand-file-name "~/.emacs.d/scala-mode/") load-path)  )
-;; (require 'scala-mode-auto)
 (autoload 'scala-mode-auto "loading scala-mode" t)
 (add-hook 'scala-mode-hook
 	  '(lambda ()
 	     (yas/minor-mode-on)
 	     ))
-(setq yas/my-directory "~/.emacs.d/scala-mode/contrib/yasnippet/snippets")
-(yas/load-directory yas/my-directory)
+;; (setq yas/my-directory "~/.emacs.d/scala-mode/contrib/yasnippet/snippets")
+;; (yas/load-directory yas/my-directory)
 
 
 
 ;; Lua mode configuration
 ;; This mode is clone from GitHub
-(setq load-path (cons (expand-file-name "~/.emacs.d/lua-mode/") load-path)  )
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
-(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
 (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 (setq lua-indent-level 2)
 (setq lua-electric-flag nil)
@@ -201,47 +203,22 @@
 (add-hook 'lua-mode-hook 'lua-abbrev-mode-off)
 (setq save-abbrevs nil)   ;; is this still needed?
 
-
-
 ;; For MarkDown Mode
-;; Although I still don't know what it is...
-(autoload 'markdown-mode "markdown-mode.el"
-  "Major mode for editing Markdown files" t)
-(setq auto-mode-alist
-      (cons '("\\.text" . markdown-mode) auto-mode-alist))
-
-
+(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
 
 ;; C#-mode
 (autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
-(setq auto-mode-alist
-      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
-
-
 
 ;; Clojure Mode
-(setq load-path (cons (expand-file-name "~/.emacs.d/clojure-mode/") load-path)  )
-;; major mode from <https://github.com/technomancy/clojure-mode>
 (autoload 'clojure-mode "clojure-mode" "Major mode for editing clojure code" t)
 (defun turn-on-paredit () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'turn-on-paredit)
 
 
 
-;; scheme mode
-(add-to-list 'auto-mode-alist '("\\.scm$" . scheme-mode))
 
 
 ;;; Common Lisp
 ;; (setq inferior-lisp-program "sbcl")
 ;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
-
-(autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
-(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
-(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
-(setq auto-mode-alist (append '(("\\.pl$" . prolog-mode))
-                              ;; (setq prolog-system 'swi)  ; optional, the system you are using;
-                              ;;                            ; see `prolog-system' below for possible values
-                              auto-mode-alist))
-
 

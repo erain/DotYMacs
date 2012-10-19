@@ -1,23 +1,13 @@
-;; load something not in the default folder
-;; (setq load-path (cons (expand-file-name "~/some-folder") load-path)  )
-(setq load-path (cons (expand-file-name "~/.emacs.d/") load-path)  )
-
-(setq load-path (cons (expand-file-name "~/.emacs.d/color-theme") load-path)  )
-;; (autoload 'color-theme "loading color theme" t)
-(require 'color-theme)
+;;;;;;;;
+;; color theme
+;;;;;;;;
+(autoload 'color-theme "loading color theme" t)
 (color-theme-initialize)
-(load-file "~/.emacs.d/color-theme/themes/color-theme-blackboard.el")
+;; (color-theme-classic)
 ;; (color-theme-arjen)
 ;; (color-theme-hober)
-(color-theme-gruber-darker)
-;;;;
-;; solarized theme for emacs
-;;;
-;; (setq load-path (cons (expand-file-name "~/.emacs.d/color-theme/themes/emacs-color-theme-solarized/") load-path)  )
-;; (autoload 'color-theme-solarized "color-theme-solarized" t)
-;; (require 'color-theme-solarized)
-;; (color-theme-solarized-dark)
-;; (color-theme-solarized-light)
+;; (color-theme-gruber-darker)
+(load-theme 'zenburn t)
 
 
 
@@ -108,3 +98,7 @@
 (setq outline-minor-mode-prefix [(control o)])
 
 
+(setq package-archives '(("ELPA" . "http://tromey.com/elpa/") 
+                          ("gnu" . "http://elpa.gnu.org/packages/")
+                          ("marmalade" . "http://marmalade-repo.org/packages/")
+                          ("melpa" . "http://melpa.milkbox.net/packages/")))

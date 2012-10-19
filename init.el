@@ -1,26 +1,13 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 
+(package-initialize)
+
+;; load something not in the default folder
+(setq load-path (cons (expand-file-name "~/.emacs.d/") load-path)  )
+
 (load "~/.emacs.d/emacs_settings.el")
 (load "~/.emacs.d/emacs_enhance.el")
 (load "~/.emacs.d/languages.el")
-
-
-(mapc
- (function (lambda (setting)
-	     (setq auto-mode-alist
-		   (cons setting auto-mode-alist))))
- '(("\\.xml$".  sgml-mode)
-   ("\\\.bash" . sh-mode)
-   ("\\.rdf$".  sgml-mode)
-   ("\\.session" . emacs-lisp-mode)
-   ("\\.l$" . c-mode)
-   ("\\.css$" . css-mode)
-   ("\\.cfm$" . html-mode)
-   ("gnus" . emacs-lisp-mode)
-   ("\\.idl$" . idl-mode)
-   ("\\.m$" . octave-mode)
-   ("\\.md$" . markdown-mode)))
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -37,11 +24,3 @@
  '(show-paren-mode t)
  '(weblogger-config-alist (quote ( ("erain9" "http://erain9.wordpress.com/xmlrpc.php" "erain9" "" "21697997") )))
  )
-
-
-
-
-
-
-
-
